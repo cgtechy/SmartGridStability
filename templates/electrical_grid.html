@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html>
 <head>
+    
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,125 +14,137 @@
     {% else %}
         <title>Electrical Grid</title>
     {% endif %}
+
 </head>
 <body>
     
       <div class="bg-img">
-      <div class="centered" style="font-size: 60px"><b>Electrical Grid Stability Prediction</b></div>
         <div class="container">
           <div class="topnav">
             <a href="{{ url_for('electrical_grid') }}">Home</a>
-            <a href="{{ url_for('predictor') }}">Grid Stability Predictor</a>
+            <a href="{{ url_for('predictor') }}">Stability Predictor</a>
           </div>   
-          </div>
+        </div>
       </div>
-      </div>
+      
 
         
-    <div id="gridpage">
-        <h1>Electrical Grid Stability Prediction</h1>
-        The local stability of the four-node star electrical grid with centralized production is analyzed by implementing Decentral Smart Grid Control concept. The Decentral Smart Grid Control (DSGC) system introduces a real-time pricing, it ties the electricity price to the grid frequency so that it is available to all participants, i.e., all electricity consumers and producers. 
-        <br>Data Source: <a href="https://archive.ics.uci.edu/ml/datasets/Electrical+Grid+Stability+Simulated+Data+">Electrical Grid Stability Simulated Dataset</a><br><br>
-        <div class="col-lg-4 col-md-6 blog-middle mb-lg-0 mb-sm-5 pb-lg-0 pb-md-5">
-        <img src="{{ url_for('static', filename='grid.jfif') }}" class="img-fluid" alt="" />
-        <a href="{{ url_for('predictor') }}">
-          <div class="blog-info">
-           <button id="sub" type="submit "><h4>Grid Stability Predictor</h4></button>
-          </div>
-        </a>
-      </div>
-      <br>
-      Example - Input Values<br>
-        <img style="min-width: 600px" src="/static/input.png"/ class="center"><br>
-        <br><h5>Attribute Information:</h5>
+      <div id="gridpage">
+
+        <h1>Smart Grid Stability</h1><br>
+         
+         Smart Grid is a concept for transforming the electric power grid by using advanced automatic control, communications techniques and information technology. In a smart grid, consumer demand information is collected, centrally evaluated against current supply conditions and the resulting proposed price information is sent back to customers for them to decide about usage. The objective is to understand and plan for both energy production, consumption disturbances and fluctuations introduced by system participants in a dynamic way, considering technical aspects, participant behaviour of responding to changes in the associated economic aspects or energy price. We are taking total power balance, reaction time and price elasticity (willingness to change consumption in response to price changes) as input features, analyzing the data, fitting the model using artificial neural networks.<br><br>
+
+         Before the rise of renewable energy sources, the traditional operating ecosystem involved few production entities (sources) supplying energy to consumers over unidirectional flows. With the advancement of renewable options, end users (households and enterprises) now not only consume energy but have the ability to produce and supply it - hence a new term to designate them, 'prosumers'. As a result, energy flow within distribution grids - 'smart grids' - has become bidirectional.<br><br>
+         The local stability of the four-node star architecture, comprising one power source (a centralized generation node) supplying energy to three consumption nodes is analyzed by implementing Decentral Smart Grid Control concept. The Decentral Smart Grid Control (DSGC) system ties the electricity price to the grid frequency so that it is available to all participants.<br><br>
+
+        <img src="{{ url_for('static', filename='4node.png') }}" alt="4 - Node Star" width = "70%" class="center"/>
+        <br><br>
+
+        <h3>ANN Model</h3><br>
+        
+         The following artificial neural network (ANN) architecture is used for predicting stability of smart grid. It reflects an sequential structure with:<br>
+        
         <ul>
-          <li>tau[x]: reaction time of participant (real from the range [0.5,10]s). Tau1 - the value for electricity producer.</li>
-          <li>p[x]: nominal power consumed(negative)/produced(positive)(real). For consumers from the range [-0.5,-2]s^-2; p1 = abs(p2 + p3 + p4)</li>
-          <li>g[x]: coefficient (gamma) proportional to price elasticity (real from the range [0.05,1]s^-1). g1 - the value for electricity producer.</li>
-          <li>stab: the maximal real part of the characteristic equation root (if positive - the system is linearly unstable)(real)</li>
-          <li>stabf: the stability label of the system (categorical: stable/unstable)</li>
-        </ul><br>
+          <li>One input layer (12 input nodes)</li>
+          <li>Three hidden layers (24, 24 and 12 nodes, respectively)</li>
+          <li>One single-node output layer</li>
+        </ul>
+  
+        
+         As features are numerical real numbers within ranges, we have used 'relu' as the activation function for hidden layers. Similarly, as this is a logistic classification exercise, where the output is binary ('0' for 'unstable', '1' for 'stable'), we have used 'sigmoid' as the activation function for hidden layers. Compilation is done with 'adam' as optimizer and 'binary_crossentropy' as the loss function.
 
-    </div>
+        <br><br>
+        <img src="{{ url_for('static', filename='ann.png') }}" alt="ANN model" width="70%" class="center"/><br>
+        
+       <!-- <br><h3>Attributes Information:</h3><br>
+        
+        <img src="{{ url_for('static', filename='input.png') }}" alt="Attributes" width="90%" class="center"/><br>
+        <ul>
+          <li>'tau1' to 'tau4': The reaction time of each network participant, a real value within the range [0.5,10]s ('tau1' corresponds to the supplier node, 'tau2' to 'tau4' to the consumer nodes).</li>
+          <li>'p1' to 'p4': The nominal power produced (positive) or consumed (negative) by each network participant, a real value within the range [-2.0,-0.5]s^-2 for consumers ('p2' to 'p4'). As the total power consumed equals the total power generated, p1 (supplier node) = - (p2 + p3 + p4).</li>
+          <li>'g1' to 'g4': price elasticity coefficient for each network participant, a real value within the range [0.05,1.00]s^-1 ('g1' corresponds to the supplier node, 'g2' to 'g4' to the consumer nodes; 'g' stands for 'gamma').</li>
+          <li>'stab': the maximum real part of the characteristic differentia equation root (if positive, the system is linearly unstable; if negative, linearly stable).</li>
+          <li>'stabf': a categorical (binary) label ('stable' or 'unstable').</li>
+        </ul> -->
+        <br>
+        
+        <h4>Sources</h4><br>
+        
+        <ul>
+          <li>Data :<a href="https://archive.ics.uci.edu/ml/datasets/Electrical+Grid+Stability+Simulated+Data+">Electrical Grid Stability Simulated Dataset</a></li>
+          <li>Research paper cited : <a href="https://dbis.ipd.kit.edu/download/DSGC_simulations.pdf">Arzamasov, Vadim, Klemens Böhm, and Patrick Jochem. 'Towards Concise Models of Grid Stability.' Communications, Control, and Computing Technologies for Smart Grids (SmartGridComm), 2018 IEEE International Conference on. IEEE, 2018 [Online]</a></li>
+        </ul>
 
+      </div>
+
+</body>
+    
     <style>
 
-        body {font-family: Arial, Helvetica, sans-serif;}
-        * {box-sizing: border-box;}
-        
-      .bg-img {
-          /* The image used */
-          background-image: url("/static/smart_grid.gif");
-
-          min-height: 400px;
-
-          /* Center and scale the image nicely */
+        body { 
+          font-family: Arial, Helvetica, Times;
+          background-color:  #e5f2e5;
+        }
+         
+        .bg-img {
+          background-image: url("/static/hybrid-Solar.gif");
+          min-height: 500px;
           background-position: center;
           background-repeat: no-repeat;
           background-size: cover;
-
-          /* Needed to position the navbar */
-          position: relative;
         }
-
-        /* Position the navbar container inside the image */
+        
         .container {
           position: absolute;
           margin: 20px;
           width: auto;
         }
 
-        /* The navbar */
+        
         .topnav {
           overflow: hidden;
-          background-color: #29AB87;
+          background-color: #ffffff;
+          opacity: 0.9;
+          
         }
 
-        /* Navbar links */
         .topnav a {
           float: left;
-          color: #f2f2f2;
+          color: #000000;
           text-align: center;
           padding: 14px 16px;
           text-decoration: none;
           font-size: 18px;
+          border-style: solid;
+          border-width: 1px;
+        }
+
+        .topnav a:last-child { 
+          border-left: none; 
         }
 
         .topnav a:hover {
-          background-color: #ddd;
-          color: black;
+          background-color: #000000;
+          color: #ffffff;  
         }
-
-
-        .centered {
-            position: absolute;
-            top: 75%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-          }
          
-        button {
-          background-color: #29AB87;
-          border: none;
-          color: white;
-          padding: 15px 32px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
+        .center {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          border-style: solid;
+          border-width: 1px; 
         }
-
     
         #gridpage {
-          padding: 20px;
-          border-spacing: 15px;
+          margin-left: 15%;
+          margin-right: 15%;
+          margin-top: 2%;
+          display: block;
           text-align: justify;
-          border-bottom-left-radius: 25px;
-          border-bottom-right-radius: 25px;
         }
+
 
     </style>
     <!-- Optional JavaScript -->
@@ -138,5 +152,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-</body>
+
 </html>
