@@ -45,9 +45,9 @@ def predictor():
         prediction = model_grid.predict(X_test)
         
         if prediction[0][0] <= 0.5:
-            return render_template('predictionunstable.html', prediction_text="Oops! the system is linearly unstable with a stability value of {:.5f}.".format(prediction[0][0]), title='Electrical Grid Stability')
+            return render_template('predictionunstable.html', prediction_text="Oops! the system is UNSTABLE with a stability value of {:.5f}.".format(prediction[0][0]), title='Electrical Grid Stability')
         else:
-            return render_template('predictionstable.html', prediction_text="Great! the system is stable with a stability value of {:.5f}.".format(prediction[0][0]), title='Electrical Grid Stability')
+            return render_template('predictionstable.html', prediction_text="Great! the system is STABLE with a stability value of {:.5f}.".format(prediction[0][0]), title='Electrical Grid Stability')
     else:
         return render_template('predictor.html', title='Electrical Grid Stability')
 
