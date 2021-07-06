@@ -16,7 +16,7 @@ from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 
-model_grid = load_model('SG2424121.h5')
+model_grid = load_model('Model.h5')
 scaler=load('Scaler.joblib')
 
 @app.route('/',methods=['GET'])
